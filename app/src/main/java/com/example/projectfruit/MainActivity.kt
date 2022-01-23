@@ -107,8 +107,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                         Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
                         viewModel.addNewFruitOnFirebase(
-                            name, fruit = Fruit(
-                                name = categoryName,
+                            categoryName, fruit = Fruit(
+                                id = price,
+                                name = name,
                                 price = price,
                                 idFruitCategory = it
                             )

@@ -68,8 +68,8 @@ class MainViewModel @ViewModelInject constructor(
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 for (fruitData in snapshot.children) {
-//                                    val data = fruitData.getValue(Fruit::class.java)
-//                                    insertFruit(fruitData.getValue(Fruit::class.java)!!)
+                                    val data = fruitData.getValue(Fruit::class.java)
+                                    insertFruit(data!!)
                                 }
                             }
 
