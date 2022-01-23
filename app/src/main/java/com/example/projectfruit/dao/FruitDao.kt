@@ -38,6 +38,6 @@ interface FruitDao {
     @Delete
     suspend fun deleteFruit(fruit: Fruit?)
 
-    @Update
-    suspend fun updateFruit(fruit: Fruit?)
+    @Query("UPDATE FRUIT SET name = :name, price= :price WHERE id =:id")
+    suspend fun updateFruit(id: Int?, name: String?, price: Int?)
 }

@@ -10,10 +10,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.example.projectfruit.R
+import com.example.projectfruit.model.Fruit
 
 class CustomDialogFruit(
     context: Context,
-    private val dialogFruitListener: DialogFruitListener
+    private val dialogFruitListener: DialogFruitListener,
+    private val fruit: Fruit?
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,11 @@ class CustomDialogFruit(
                 dialogFruitListener.nameEntered(name, price)
                 dismiss()
             }
+        }
+
+        fruit?.let {
+            edtName.setText(it.name)
+            edtPrice.setText(it.price.toString())
         }
 
         btnCancel.setOnClickListener {

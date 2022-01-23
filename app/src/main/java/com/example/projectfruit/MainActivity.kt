@@ -13,6 +13,7 @@ import kotlin.collections.ArrayList
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import com.example.projectfruit.common.Constant
 import com.example.projectfruit.dao.FruitDao
 import com.example.projectfruit.dialog.CustomDialogCategory
 import com.example.projectfruit.dialog.CustomDialogFruit
@@ -21,6 +22,10 @@ import com.example.projectfruit.database.FruitDatabase
 import com.example.projectfruit.viewmodel.MainViewModel
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryListener {
@@ -45,16 +50,16 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     }
 
     private fun initData() {
-        mAdapter = FruitCategoryAdapter(applicationContext, this, viewModel)
+        mAdapter = FruitCategoryAdapter(applicationContext, this)
         rcvFruitCategory?.layoutManager = LinearLayoutManager(applicationContext)
         rcvFruitCategory?.adapter = mAdapter
         viewModel.insertCategory(listFruitCategory)
         viewModel.getMCategory().observe(this, {
             mAdapter?.setListFruitCategory(it)
         })
-       // viewModel.getDataFromFirebase()
-      //  viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
-        viewModel.getDataFromFirebase()
+        // viewModel.getDataFromFirebase()
+        //  viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
+        // viewModel.getDataFromFirebase()
     }
 
     private fun initAction() {
@@ -120,7 +125,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                     }
                 }
             }
-        val dialog = CustomDialogFruit(this, fruitListener)
+        val dialog = CustomDialogFruit(this, fruitListener, null)
         dialog.show()
     }
 
@@ -144,5 +149,38 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         openDialogAddFruit(id, name)
     }
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
 
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(pair: Pair<Fruit, Constant.KeyEvent>) {
+        when (pair.second) {
+            Constant.KeyEvent.UPDATE_FRUIT -> {
+                openDialogEditFruit(pair.first)
+            }
+            Constant.KeyEvent.DELETE_FRUIT -> {
+                viewModel.deleteFruit(pair.first)
+            }
+        }
+    }
+
+    private fun openDialogEditFruit(fruit: Fruit) {
+        val fruitListener: CustomDialogFruit.DialogFruitListener =
+            object : CustomDialogFruit.DialogFruitListener {
+
+                override fun nameEntered(name: String, price: Int) {
+                    viewModel.updateFruit(name = name, price = price, id = fruit.id)
+                    Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG).show()
+                }
+            }
+        val dialog = CustomDialogFruit(this, fruitListener, fruit)
+        dialog.show()
+    }
 }

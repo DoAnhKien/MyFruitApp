@@ -59,8 +59,8 @@ class MainViewModel @ViewModelInject constructor(
         fruitDao.deleteFruit(fruit)
     }
 
-    fun updateFruit(fruit: Fruit) = viewModelScope.launch {
-        fruitDao.updateFruit(fruit)
+    fun updateFruit(id: Int?, name: String?, price: Int?) = viewModelScope.launch {
+        fruitDao.updateFruit(id, name, price)
     }
 
 

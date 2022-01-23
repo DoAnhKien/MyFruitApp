@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.example.projectfruit.R
+import com.example.projectfruit.common.Constant
 import com.example.projectfruit.model.Fruit
 import com.example.projectfruit.viewmodel.MainViewModel
+import org.greenrobot.eventbus.EventBus
 
 class FruitAdapter(
-    var mListFruit: List<Fruit>,
-    private val mainViewModel: MainViewModel
+    var mListFruit: List<Fruit>
 ) :
     RecyclerView.Adapter<FruitAdapter.RecyclerViewHolder>() {
 
@@ -53,10 +54,11 @@ class FruitAdapter(
             tvPrice.text = fruit.price.toString()
 
             ivAdd.setOnClickListener {
+                EventBus.getDefault().post( Pair(fruit, Constant.KeyEvent.UPDATE_FRUIT))
             }
 
             ivDelete.setOnClickListener {
-                mainViewModel.deleteFruit(fruit)
+                EventBus.getDefault().post( Pair(fruit, Constant.KeyEvent.DELETE_FRUIT))
             }
         }
     }
