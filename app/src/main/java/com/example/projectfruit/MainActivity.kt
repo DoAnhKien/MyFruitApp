@@ -2,7 +2,6 @@ package com.example.projectfruit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectfruit.adapter.FruitCategoryAdapter
@@ -14,11 +13,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import com.example.projectfruit.common.Constant
-import com.example.projectfruit.dao.FruitDao
 import com.example.projectfruit.dialog.CustomDialogCategory
 import com.example.projectfruit.dialog.CustomDialogFruit
 import com.google.android.material.appbar.MaterialToolbar
-import com.example.projectfruit.database.FruitDatabase
 import com.example.projectfruit.viewmodel.MainViewModel
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +54,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         viewModel.getMCategory().observe(this, {
             mAdapter?.setListFruitCategory(it)
         })
-        // viewModel.getDataFromFirebase()
         //  viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
         // viewModel.getDataFromFirebase()
     }

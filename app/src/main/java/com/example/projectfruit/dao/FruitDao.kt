@@ -6,7 +6,6 @@ import com.example.projectfruit.model.Fruit
 import com.example.projectfruit.model.FruitCategoryAndFruits
 import com.example.projectfruit.model.FruitCategory
 
-
 @Dao
 interface FruitDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

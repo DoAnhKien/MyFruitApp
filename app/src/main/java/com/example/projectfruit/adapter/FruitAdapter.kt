@@ -1,6 +1,5 @@
 package com.example.projectfruit.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.example.projectfruit.R
 import com.example.projectfruit.common.Constant
 import com.example.projectfruit.model.Fruit
-import com.example.projectfruit.viewmodel.MainViewModel
 import org.greenrobot.eventbus.EventBus
 
 class FruitAdapter(

@@ -3,7 +3,6 @@ package com.example.projectfruit.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
