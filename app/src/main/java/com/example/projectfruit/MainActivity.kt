@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                                 idFruitCategory = it
                             )
                         )
+                        viewModel.getDataFromFirebase()
                     }
                 }
             }
