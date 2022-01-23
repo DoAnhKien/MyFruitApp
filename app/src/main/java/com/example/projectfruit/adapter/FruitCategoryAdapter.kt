@@ -14,10 +14,12 @@ import com.example.projectfruit.R
 import com.example.projectfruit.model.Fruit
 import com.example.projectfruit.model.FruitCategory
 import com.example.projectfruit.model.FruitCategoryAndFruits
+import com.example.projectfruit.viewmodel.MainViewModel
 
 class FruitCategoryAdapter(
     private val mContext: Context,
-    private val itemListener: FruitCategoryListener
+    private val itemListener: FruitCategoryListener,
+    private val mainViewModel: MainViewModel
 ) :
     RecyclerView.Adapter<FruitCategoryAdapter.RecyclerViewHolder>(), OnItemFruitCategoryClick {
 
@@ -61,7 +63,7 @@ class FruitCategoryAdapter(
                 icArrow.setImageResource(R.drawable.ic_arrow_up)
 
             data.fruits?.let {
-                val mAdapter = FruitAdapter(it)
+                val mAdapter = FruitAdapter(it, mainViewModel)
                 rcvFruit.layoutManager = LinearLayoutManager(mContext)
                 rcvFruit.adapter = mAdapter
             }

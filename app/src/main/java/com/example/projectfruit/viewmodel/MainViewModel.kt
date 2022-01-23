@@ -45,7 +45,6 @@ class MainViewModel @ViewModelInject constructor(
 
     fun updateDataToFirebase(title: String, key: String, fruit: Fruit) = viewModelScope.launch {
         refProduct.child(title).child(key).setValue(fruit)
-
     }
 
     fun addNewFruitOnFirebase(title: String, fruit: Fruit) = viewModelScope.launch {
@@ -54,6 +53,14 @@ class MainViewModel @ViewModelInject constructor(
 
     fun addNewCategory(category: String){
         refProduct.child(category).setValue(category)
+    }
+
+    fun deleteFruit(fruit: Fruit) = viewModelScope.launch {
+        fruitDao.deleteFruit(fruit)
+    }
+
+    fun updateFruit(fruit: Fruit) = viewModelScope.launch {
+        fruitDao.updateFruit(fruit)
     }
 
 

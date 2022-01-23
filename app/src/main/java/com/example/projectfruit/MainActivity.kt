@@ -45,13 +45,15 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     }
 
     private fun initData() {
-        mAdapter = FruitCategoryAdapter(applicationContext, this)
+        mAdapter = FruitCategoryAdapter(applicationContext, this, viewModel)
         rcvFruitCategory?.layoutManager = LinearLayoutManager(applicationContext)
         rcvFruitCategory?.adapter = mAdapter
         viewModel.insertCategory(listFruitCategory)
         viewModel.getMCategory().observe(this, {
             mAdapter?.setListFruitCategory(it)
         })
+       // viewModel.getDataFromFirebase()
+      //  viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
         viewModel.getDataFromFirebase()
     }
 
@@ -127,6 +129,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             object : CustomDialogCategory.DialogCategoryListener {
 
                 override fun nameEntered(name: String) {
+                    viewModel.insertCategory(FruitCategory(nameCategory = name))
                     Toast.makeText(this@MainActivity, "Tên danh : $name", Toast.LENGTH_LONG).show()
                     viewModel.addNewCategory(name)
                     viewModel.getDataFromFirebase()

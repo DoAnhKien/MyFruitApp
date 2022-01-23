@@ -35,4 +35,9 @@ interface FruitDao {
     @Insert
     suspend fun insertFruit(fruit: Fruit?)
 
+    @Delete
+    suspend fun deleteFruit(fruit: Fruit?)
+
+    @Update
+    suspend fun updateFruit(fruit: Fruit?)
 }
