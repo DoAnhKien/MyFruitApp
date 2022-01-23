@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             mAdapter?.setListFruitCategory(it)
         })
         viewModel.getDataFromFirebase()
+        viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
     }
 
     private fun initAction() {

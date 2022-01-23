@@ -43,6 +43,16 @@ class MainViewModel @ViewModelInject constructor(
         fruitDao.insertFruit(data)
     }
 
+    fun updateDataToFirebase(title: String, key: String, fruit: Fruit) = viewModelScope.launch {
+        refProduct.child(title).child(key).setValue(fruit)
+
+    }
+
+    fun addNewFruitOnFirebase(title: String, fruit: Fruit) = viewModelScope.launch {
+        refProduct.child(title).push().setValue(fruit)
+    }
+
+
     fun getDataFromFirebase() {
         refProduct.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -54,15 +64,7 @@ class MainViewModel @ViewModelInject constructor(
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 for (fruitData in snapshot.children) {
-                                    val data = fruitData.getValue(Fruit::class.java)
-                                    Log.d(
-                                        "kienda",
-                                        "onDataChange: ${fruitData.getValue(Fruit::class.java)!!.id}"
-                                    )
-                                    Log.d(
-                                        "kienda",
-                                        "onDataChange: ${fruitData.getValue(Fruit::class.java)!!.idFruitCategory}"
-                                    )
+//                                    val data = fruitData.getValue(Fruit::class.java)
 //                                    insertFruit(fruitData.getValue(Fruit::class.java)!!)
                                 }
                             }

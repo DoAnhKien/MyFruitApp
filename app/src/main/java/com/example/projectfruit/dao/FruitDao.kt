@@ -9,7 +9,7 @@ import com.example.projectfruit.model.FruitCategory
 
 @Dao
 interface FruitDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFruitCategory(fruitCategory: FruitCategory?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
