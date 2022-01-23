@@ -67,7 +67,10 @@ class FruitCategoryAdapter(
             }
 
             ivAdd.setOnClickListener {
-                itemListener.onClickListener(data.fruitCategory.id)
+                itemListener.onClickListener(
+                    data.fruitCategory.id,
+                    data.fruitCategory.nameCategory ?: ""
+                )
             }
 
             rcvFruit.visibility = if (data.fruitCategory.expanded) View.VISIBLE else View.GONE
@@ -84,7 +87,7 @@ class FruitCategoryAdapter(
     }
 
     interface FruitCategoryListener {
-        fun onClickListener(id: Int?)
+        fun onClickListener(id: Int?, name: String)
     }
 
     override fun onClick(position: Int, fruitData: Fruit) {

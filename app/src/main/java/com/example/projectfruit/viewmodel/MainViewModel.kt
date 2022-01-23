@@ -52,6 +52,10 @@ class MainViewModel @ViewModelInject constructor(
         refProduct.child(title).push().setValue(fruit)
     }
 
+    fun addNewCategory(category: String){
+        refProduct.child(category).setValue(category)
+    }
+
 
     fun getDataFromFirebase() {
         refProduct.addListenerForSingleValueEvent(object : ValueEventListener {

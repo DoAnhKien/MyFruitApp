@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             mAdapter?.setListFruitCategory(it)
         })
         viewModel.getDataFromFirebase()
-        viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
     }
 
     private fun initAction() {
@@ -92,7 +91,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         mAdapter?.filterList(filterList)
     }
 
-    private fun openDialogAddFruit(id: Int?) {
+    private fun openDialogAddFruit(id: Int?, categoryName: String) {
         val fruitListener: CustomDialogFruit.DialogFruitListener =
             object : CustomDialogFruit.DialogFruitListener {
 
@@ -107,6 +106,13 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                         )
                         Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
+                        viewModel.addNewFruitOnFirebase(
+                            name, fruit = Fruit(
+                                name = categoryName,
+                                price = price,
+                                idFruitCategory = it
+                            )
+                        )
                     }
                 }
             }
@@ -120,14 +126,17 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
                 override fun nameEntered(name: String) {
                     Toast.makeText(this@MainActivity, "Tên danh : $name", Toast.LENGTH_LONG).show()
+                    viewModel.addNewCategory(name)
+                    viewModel.getDataFromFirebase()
                 }
+
             }
         val dialog = CustomDialogCategory(this, categoryListener)
         dialog.show()
     }
 
-    override fun onClickListener(id: Int?) {
-        openDialogAddFruit(id)
+    override fun onClickListener(id: Int?, name: String) {
+        openDialogAddFruit(id, name)
     }
 
 
