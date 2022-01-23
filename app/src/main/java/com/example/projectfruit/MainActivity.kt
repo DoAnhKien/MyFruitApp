@@ -31,9 +31,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     private var mAdapter: FruitCategoryAdapter? = null
     private var topAppBar: MaterialToolbar? = null
 
-    private val refProduct: DatabaseReference by lazy {
-        FirebaseDatabase.getInstance().reference.child("fruit")
-    }
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         viewModel.getMCategory().observe(this, {
             mAdapter?.setListFruitCategory(it)
         })
-        getDataFromFirebase()
+        viewModel.getDataFromFirebase()
     }
 
     private fun initAction() {
@@ -130,45 +127,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
     override fun onClickListener(id: Int?) {
         openDialogAddFruit(id)
-    }
-
-    private fun getDataFromFirebase() {
-        refProduct.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val listCategory = arrayListOf<FruitCategory>()
-                for ((count, data) in snapshot.children.withIndex()) {
-                    val fruitCategory = FruitCategory()
-                    fruitCategory.nameCategory = data.key
-                    fruitCategory.id = count
-                    refProduct.child(data.key ?: "")
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                for (fruitData in snapshot.children) {
-                                    val data = fruitData.getValue(Fruit::class.java)
-                                    Log.d(
-                                        "kienda",
-                                        "onDataChange: ${fruitData.getValue(Fruit::class.java)!!.id}"
-                                    )
-                                    Log.d(
-                                        "kienda",
-                                        "onDataChange: ${fruitData.getValue(Fruit::class.java)!!.idFruitCategory}"
-                                    )
-//                                    viewModel.insertFruit(fruitData.getValue(Fruit::class.java)!!)
-                                }
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                            }
-                        })
-                    viewModel.insertCategory(fruitCategory)
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
     }
 
 

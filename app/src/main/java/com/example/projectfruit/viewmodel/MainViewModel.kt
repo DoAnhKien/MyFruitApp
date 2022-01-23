@@ -1,5 +1,6 @@
 package com.example.projectfruit.viewmodel
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.example.projectfruit.dao.FruitDao
 import com.example.projectfruit.model.Fruit
 import com.example.projectfruit.model.FruitCategory
 import com.example.projectfruit.model.FruitCategoryAndFruits
+import com.google.firebase.database.*
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
@@ -17,7 +19,9 @@ class MainViewModel @ViewModelInject constructor(
 
     private val mCategory = fruitDao.getFruitCategoryAndFruits()
     private val mFruitCategories = fruitDao.getAllFruitCategories()
-
+    private val refProduct: DatabaseReference by lazy {
+        FirebaseDatabase.getInstance().reference.child("fruit")
+    }
 
     fun getMCategory(): LiveData<MutableList<FruitCategoryAndFruits>> {
         return mCategory
@@ -27,16 +31,54 @@ class MainViewModel @ViewModelInject constructor(
         return mFruitCategories
     }
 
-    fun insertCategory(data : MutableList<FruitCategory>) = viewModelScope.launch {
+    fun insertCategory(data: MutableList<FruitCategory>) = viewModelScope.launch {
         fruitDao.insertFruitCategories(data)
     }
 
-    fun insertCategory(data : FruitCategory) = viewModelScope.launch {
+    fun insertCategory(data: FruitCategory) = viewModelScope.launch {
         fruitDao.insertFruitCategory(data)
     }
 
-    fun insertFruit(data : Fruit) = viewModelScope.launch {
+    fun insertFruit(data: Fruit) = viewModelScope.launch {
         fruitDao.insertFruit(data)
+    }
+
+    fun getDataFromFirebase() {
+        refProduct.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for ((count, data) in snapshot.children.withIndex()) {
+                    val fruitCategory = FruitCategory()
+                    fruitCategory.nameCategory = data.key
+                    fruitCategory.id = count
+                    refProduct.child(data.key ?: "")
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (fruitData in snapshot.children) {
+                                    val data = fruitData.getValue(Fruit::class.java)
+                                    Log.d(
+                                        "kienda",
+                                        "onDataChange: ${fruitData.getValue(Fruit::class.java)!!.id}"
+                                    )
+                                    Log.d(
+                                        "kienda",
+                                        "onDataChange: ${fruitData.getValue(Fruit::class.java)!!.idFruitCategory}"
+                                    )
+//                                    insertFruit(fruitData.getValue(Fruit::class.java)!!)
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                    insertCategory(fruitCategory)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
 }

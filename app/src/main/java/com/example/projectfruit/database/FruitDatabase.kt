@@ -29,7 +29,7 @@ abstract class FruitDatabase : RoomDatabase() {
             super.onCreate(db)
             val questionDao = appDatabase.get().getFruitDao()
             applicationScope.launch {
-
+                // todo it just for once
             }
         }
 
