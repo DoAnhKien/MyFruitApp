@@ -12,6 +12,7 @@ import kotlin.collections.ArrayList
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentManager
 import com.example.projectfruit.common.Constant
 import com.example.projectfruit.dialog.CustomDialogCategory
 import com.example.projectfruit.dialog.CustomDialogFruit
@@ -32,13 +33,20 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     private val listFruitCategory: ArrayList<FruitCategory> = ArrayList()
     private var mAdapter: FruitCategoryAdapter? = null
     private var topAppBar: MaterialToolbar? = null
+    private val dialog: LoadingDialogFragment by lazy {
+        LoadingDialogFragment()
+    }
 
+    private val fManager: FragmentManager by lazy {
+        this.supportFragmentManager
+    }
 
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        dialog.show(fManager, "")
         rcvFruitCategory = findViewById(R.id.rcv_fruit_category)
         edtSearch = findViewById(R.id.menu_search)
         topAppBar = findViewById(R.id.top_app_bar)
@@ -53,9 +61,11 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         viewModel.insertCategory(listFruitCategory)
         viewModel.getMCategory().observe(this, {
             mAdapter?.setListFruitCategory(it)
+            if (!it.isNullOrEmpty()) {
+                dialog.dismiss()
+            }
         })
-        //  viewModel.updateDataToFirebase("FreeFood", "m", Fruit(1, "2", 3, 4))
-        // viewModel.getDataFromFirebase()
+        viewModel.getDataFromFirebase()
     }
 
     private fun initAction() {
