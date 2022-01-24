@@ -159,7 +159,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                                 idFruitCategory = it
                             )
                         )
-                        viewModel.getDataFromFirebase()
                     }
                 }
             }
@@ -175,7 +174,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                     viewModel.insertCategory(FruitCategory(nameCategory = name))
                     Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG).show()
                     viewModel.addNewCategory(name)
-                    viewModel.getDataFromFirebase()
                 }
 
             }

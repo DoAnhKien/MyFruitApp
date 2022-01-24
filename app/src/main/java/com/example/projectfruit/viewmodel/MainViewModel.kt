@@ -64,7 +64,8 @@ class MainViewModel @ViewModelInject constructor(
                         val currentFruit = data.getValue(Fruit::class.java)
                         if (currentFruit?.idFruitCategory == fruit.idFruitCategory) {
                             data.key?.let {
-                                refProduct.child(fruitCategory.nameCategory!!).child(it).setValue(fruit)
+                                refProduct.child(fruitCategory.nameCategory!!).child(it)
+                                    .setValue(null)
                             }
                             return
                         }
@@ -83,16 +84,28 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     fun updateDataForFirebase(title: String, fruit: Fruit) = viewModelScope.launch {
-
+        val fruitHashMap: HashMap<String, String> = HashMap<String, String>()
+        val fruitHashMapInt: HashMap<String, Int> = HashMap<String, Int>()
+        fruitHashMap["name"] = fruit.name.toString()
+        fruitHashMapInt["price"] = fruit.price!!.toInt()
         refProduct.child(title).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (data in snapshot.children) {
                     val currentFruit = data.getValue(Fruit::class.java)
                     if (currentFruit?.idFruitCategory == fruit.idFruitCategory) {
-                        Log.d("kienda", "updateDataForFirebase: $title + ${data.key}")
-                        data.key?.let {
-                            refProduct.child(title).child(it).setValue(fruit)
-                        }
+                        refProduct.child(title).child(data.key ?: "")
+                            .updateChildren(fruitHashMap as Map<String, String>)
+                            .addOnSuccessListener {
+                            }.addOnFailureListener {
+
+                            }
+                        refProduct.child(title).child(data.key ?: "")
+                            .updateChildren(fruitHashMapInt as Map<String, Int>)
+                            .addOnSuccessListener {
+
+                            }.addOnFailureListener {
+
+                            }
                         return
                     }
                 }

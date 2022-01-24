@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
 class Fruit(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
+    var idFruitCategory: Int? = null,
     var name: String? = null,
     var price: Int? = null,
-    var idFruitCategory: Int? = null
 )
