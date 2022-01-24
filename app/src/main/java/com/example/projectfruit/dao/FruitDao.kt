@@ -43,6 +43,9 @@ interface FruitDao {
     @Query("SELECT * FROM FruitCategory WHERE id =:id")
     fun getCategoryNameById(id: Int): FruitCategory
 
+    @Query("SELECT * FROM fruit ORDER BY id DESC LIMIT 1;")
+    fun getTheLastFruitItem(): Fruit
+
     // Delete
     @Query("DELETE FROM FruitCategory")
     suspend fun deleteAllFruitCategory()

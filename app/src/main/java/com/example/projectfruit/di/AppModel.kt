@@ -24,6 +24,7 @@ object AppModel {
     ) = Room.databaseBuilder(app, FruitDatabase::class.java, "question.db")
         .fallbackToDestructiveMigration()
         .addCallback(callBack)
+        .allowMainThreadQueries()
         .build()
 
     @Provides

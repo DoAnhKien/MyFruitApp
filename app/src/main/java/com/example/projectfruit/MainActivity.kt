@@ -120,7 +120,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 val fruits: MutableList<Fruit> = arrayListOf()
                 listFruit.forEachIndexed { index, fruit ->
                     if (fruit.name?.lowercase(Locale.getDefault())
-                            ?.contains(name.lowercase(Locale.getDefault())) == true) {
+                            ?.contains(name.lowercase(Locale.getDefault())) == true
+                    ) {
                         fruits.add(fruit)
                     }
                     if (index == listFruit.size - 1 && fruits.isNotEmpty()) {
@@ -148,15 +149,14 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                                 idFruitCategory = it
                             )
                         )
-                        Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            this@MainActivity,
+                            getString(R.string.save_success),
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                         viewModel.addNewFruitOnFirebase(
-                            categoryName, fruit = Fruit(
-                                id = price,
-                                name = name,
-                                price = price,
-                                idFruitCategory = it
-                            )
+                            categoryName, viewModel.getTheLastFruitItem()
                         )
                     }
                 }
@@ -171,7 +171,11 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
                 override fun nameEntered(name: String) {
                     viewModel.insertCategory(FruitCategory(nameCategory = name))
-                    Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        getString(R.string.save_success),
+                        Toast.LENGTH_LONG
+                    ).show()
                     viewModel.addNewCategory(name)
                 }
 

@@ -43,6 +43,8 @@ class MainViewModel @ViewModelInject constructor(
         fruitDao.insertFruit(data)
     }
 
+    fun getTheLastFruitItem() = fruitDao.getTheLastFruitItem()
+
     fun updateDataToFirebase(title: String, key: String, fruit: Fruit) = viewModelScope.launch {
         refProduct.child(title).child(key).setValue(fruit)
     }
