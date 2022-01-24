@@ -22,7 +22,7 @@ class FruitAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.layout_child, parent, false)
+        val view = layoutInflater.inflate(R.layout.layout_fruit, parent, false)
         return RecyclerViewHolder(view)
     }
 

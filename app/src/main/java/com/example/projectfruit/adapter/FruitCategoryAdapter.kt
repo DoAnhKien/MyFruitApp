@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectfruit.R
 import com.example.projectfruit.model.Fruit
-import com.example.projectfruit.model.FruitCategory
 import com.example.projectfruit.model.FruitCategoryAndFruits
 
 class FruitCategoryAdapter(
@@ -29,7 +28,7 @@ class FruitCategoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.layout_parent, parent, false)
+        val view = layoutInflater.inflate(R.layout.layout_fruit_category, parent, false)
         return RecyclerViewHolder(view)
     }
 
