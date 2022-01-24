@@ -26,7 +26,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryListener {
 
