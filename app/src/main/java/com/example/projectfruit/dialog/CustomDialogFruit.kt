@@ -32,15 +32,16 @@ class CustomDialogFruit(
         val btnSubmit = findViewById<Button>(R.id.btn_submit)
 
         btnSubmit.setOnClickListener {
+            if (edtName.text.toString().isNullOrEmpty() || edtPrice.text.toString()
+                    .isNullOrEmpty()
+            ) {
+                Toast.makeText(context, "Vui lòng nhập lại!", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             val name: String = edtName.text.toString()
             val price: Int = edtPrice.text.toString().toInt()
-
-            if (name.isEmpty()) {
-                Toast.makeText(context, "Vui lòng nhập lại!", Toast.LENGTH_LONG).show()
-            } else {
-                dialogFruitListener.nameEntered(name, price)
-                dismiss()
-            }
+            dialogFruitListener.nameEntered(name, price)
+            dismiss()
         }
 
         fruit?.let {
