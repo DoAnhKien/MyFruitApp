@@ -2,7 +2,6 @@ package com.example.projectfruit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectfruit.adapter.FruitCategoryAdapter
@@ -18,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.projectfruit.common.Constant
 import com.example.projectfruit.dialog.CustomDialogCategory
 import com.example.projectfruit.dialog.CustomDialogFruit
+import com.example.projectfruit.model.FruitCategoryAndFruits
 import com.google.android.material.appbar.MaterialToolbar
 import com.example.projectfruit.viewmodel.MainViewModel
 import com.google.firebase.database.*
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
     private var rcvFruitCategory: RecyclerView? = null
     private var edtSearch: SearchView? = null
-    private val listFruitCategory: ArrayList<FruitCategory> = ArrayList()
+    private val listFruitCategory: MutableList<FruitCategoryAndFruits> = mutableListOf()
     private var mAdapter: FruitCategoryAdapter? = null
     private var topAppBar: MaterialToolbar? = null
     private var mPullToRefresh: SwipeRefreshLayout? = null
@@ -72,8 +72,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         mAdapter = FruitCategoryAdapter(applicationContext, this)
         rcvFruitCategory?.layoutManager = LinearLayoutManager(applicationContext)
         rcvFruitCategory?.adapter = mAdapter
-        viewModel.insertCategory(listFruitCategory)
         viewModel.getMCategory().observe(this, {
+            listFruitCategory.clear()
+            listFruitCategory.addAll(it)
             mAdapter?.setListFruitCategory(it)
             if (!it.isNullOrEmpty()) {
                 dialog.dismiss()
@@ -88,8 +89,15 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 return false
             }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                filter(p0.toString())
+            override fun onQueryTextChange(name: String?): Boolean {
+                if (!name.isNullOrEmpty()) {
+                    filter(name.toString())
+                } else {
+                    listFruitCategory.forEach {
+                        it.fruitCategory.expanded = false
+                    }
+                    mAdapter?.setListFruitCategory(listFruitCategory)
+                }
                 return true
             }
 
@@ -106,16 +114,26 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         }
     }
 
-    private fun filter(text: String) {
-        val filterList: ArrayList<FruitCategory> = ArrayList()
-        for (item in listFruitCategory) {
-            if (item.nameCategory?.lowercase(Locale.getDefault())
-                    ?.contains(text.lowercase(Locale.getDefault())) == true
-            ) {
-                filterList.add(item)
+    private fun filter(name: String) {
+        val filterList: ArrayList<FruitCategoryAndFruits> = ArrayList()
+        for (category in listFruitCategory) {
+            category.fruits?.let { listFruit ->
+                val fruits: MutableList<Fruit> = arrayListOf()
+                listFruit.forEachIndexed { index, fruit ->
+                    if (fruit.name?.lowercase(Locale.getDefault())
+                            ?.contains(name.lowercase(Locale.getDefault())) == true) {
+                        fruits.add(fruit)
+                    }
+                    if (index == listFruit.size - 1 && fruits.isNotEmpty()) {
+                        val fruitCategory = category.fruitCategory.apply {
+                            this.expanded = true
+                        }
+                        filterList.add(FruitCategoryAndFruits(fruitCategory, fruits))
+                    }
+                }
             }
         }
-        mAdapter?.filterList(filterList)
+        mAdapter?.setListFruitCategory(filterList)
     }
 
     private fun openDialogAddFruit(id: Int?, categoryName: String) {
@@ -131,7 +149,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                                 idFruitCategory = it
                             )
                         )
-                        Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG)
+                        Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG)
                             .show()
                         viewModel.addNewFruitOnFirebase(
                             categoryName, fruit = Fruit(
@@ -155,7 +173,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
                 override fun nameEntered(name: String) {
                     viewModel.insertCategory(FruitCategory(nameCategory = name))
-                    Toast.makeText(this@MainActivity, "Tên danh : $name", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG).show()
                     viewModel.addNewCategory(name)
                     viewModel.getDataFromFirebase()
                 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">projectFruit</string>
+    <string name="save_success">Lưu thành công</string>
 </resources>
