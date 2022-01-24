@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.projectfruit.common.Constant
 import com.example.projectfruit.dialog.CustomDialogCategory
 import com.example.projectfruit.dialog.CustomDialogFruit
@@ -33,6 +34,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     private val listFruitCategory: ArrayList<FruitCategory> = ArrayList()
     private var mAdapter: FruitCategoryAdapter? = null
     private var topAppBar: MaterialToolbar? = null
+    private var mPullToRefresh: SwipeRefreshLayout? = null
+
+
     private val dialog: LoadingDialogFragment by lazy {
         LoadingDialogFragment()
     }
@@ -46,12 +50,21 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initViews()
+        initData()
+        initAction()
+    }
+
+    private fun initViews() {
         dialog.show(fManager, "")
         rcvFruitCategory = findViewById(R.id.rcv_fruit_category)
         edtSearch = findViewById(R.id.menu_search)
         topAppBar = findViewById(R.id.top_app_bar)
-        initData()
-        initAction()
+        mPullToRefresh = findViewById(R.id.mRefreshMain)
+        mPullToRefresh?.setOnRefreshListener {
+            viewModel.getDataFromFirebase()
+            mPullToRefresh?.isRefreshing = false
+        }
     }
 
     private fun initData() {
