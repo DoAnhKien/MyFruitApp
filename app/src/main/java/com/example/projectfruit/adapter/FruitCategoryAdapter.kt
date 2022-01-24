@@ -80,11 +80,6 @@ class FruitCategoryAdapter(
         }
     }
 
-    fun filterList(filterList: List<FruitCategory>) {
-//        mListFruitCategory = filterList
-        notifyDataSetChanged()
-    }
-
     interface FruitCategoryListener {
         fun onClickListener(id: Int?, name: String)
     }
