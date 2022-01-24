@@ -1,5 +1,6 @@
 package com.example.projectfruit.viewmodel
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -50,20 +51,63 @@ class MainViewModel @ViewModelInject constructor(
         refProduct.child(title).push().setValue(fruit)
     }
 
-    fun addNewCategory(category: String){
+    fun addNewCategory(category: String) {
         refProduct.child(category).setValue(category)
     }
 
-    fun deleteFruit(fruit: Fruit) = viewModelScope.launch {
+    fun deleteFruit(fruit: Fruit, fruitCategory: FruitCategory) = viewModelScope.launch {
         fruitDao.deleteFruit(fruit)
+        refProduct.child(fruitCategory.nameCategory!!)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (data in snapshot.children) {
+                        val currentFruit = data.getValue(Fruit::class.java)
+                        if (currentFruit?.idFruitCategory == fruit.idFruitCategory) {
+                            data.key?.let {
+                                refProduct.child(fruitCategory.nameCategory!!).child(it).setValue(fruit)
+                            }
+                            return
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("kienda", "onCancelled: $error")
+                }
+
+            })
     }
 
     fun updateFruit(id: Int?, name: String?, price: Int?) = viewModelScope.launch {
         fruitDao.updateFruit(id, name, price)
     }
 
+    fun updateDataForFirebase(title: String, fruit: Fruit) = viewModelScope.launch {
 
-    fun getDataFromFirebase() {
+        refProduct.child(title).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (data in snapshot.children) {
+                    val currentFruit = data.getValue(Fruit::class.java)
+                    if (currentFruit?.idFruitCategory == fruit.idFruitCategory) {
+                        Log.d("kienda", "updateDataForFirebase: $title + ${data.key}")
+                        data.key?.let {
+                            refProduct.child(title).child(it).setValue(fruit)
+                        }
+                        return
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("kienda", "onCancelled: $error")
+            }
+
+        })
+    }
+
+    fun getDataFromFirebase() = viewModelScope.launch {
+        fruitDao.deleteAllFruitCategory()
+        fruitDao.deleteAllFruit()
         refProduct.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for ((count, data) in snapshot.children.withIndex()) {

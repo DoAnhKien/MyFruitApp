@@ -11,10 +11,12 @@ import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.example.projectfruit.R
 import com.example.projectfruit.common.Constant
 import com.example.projectfruit.model.Fruit
+import com.example.projectfruit.model.FruitCategory
 import org.greenrobot.eventbus.EventBus
 
 class FruitAdapter(
-    var mListFruit: List<Fruit>
+    var mListFruit: List<Fruit>,
+    var fruitCategory: FruitCategory
 ) :
     RecyclerView.Adapter<FruitAdapter.RecyclerViewHolder>() {
 
@@ -52,11 +54,13 @@ class FruitAdapter(
             tvPrice.text = fruit.price.toString()
 
             ivAdd.setOnClickListener {
-                EventBus.getDefault().post( Pair(fruit, Constant.KeyEvent.UPDATE_FRUIT))
+                EventBus.getDefault()
+                    .post(Triple(fruit, Constant.KeyEvent.UPDATE_FRUIT, fruitCategory))
             }
 
             ivDelete.setOnClickListener {
-                EventBus.getDefault().post( Pair(fruit, Constant.KeyEvent.DELETE_FRUIT))
+                EventBus.getDefault()
+                    .post(Triple(fruit, Constant.KeyEvent.DELETE_FRUIT, fruitCategory))
             }
         }
     }

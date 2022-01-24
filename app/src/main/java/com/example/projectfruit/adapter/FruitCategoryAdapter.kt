@@ -60,7 +60,7 @@ class FruitCategoryAdapter(
                 icArrow.setImageResource(R.drawable.ic_arrow_up)
 
             data.fruits?.let {
-                val mAdapter = FruitAdapter(it)
+                val mAdapter = FruitAdapter(it,data.fruitCategory)
                 rcvFruit.layoutManager = LinearLayoutManager(mContext)
                 rcvFruit.adapter = mAdapter
             }

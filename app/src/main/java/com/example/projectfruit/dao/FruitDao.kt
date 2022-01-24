@@ -39,4 +39,15 @@ interface FruitDao {
 
     @Query("UPDATE FRUIT SET name = :name, price= :price WHERE id =:id")
     suspend fun updateFruit(id: Int?, name: String?, price: Int?)
+
+    @Query("SELECT * FROM FruitCategory WHERE id =:id")
+    fun getCategoryNameById(id: Int): FruitCategory
+
+    // Delete
+    @Query("DELETE FROM FruitCategory")
+    suspend fun deleteAllFruitCategory()
+
+    @Query("DELETE FROM Fruit")
+    suspend fun deleteAllFruit()
+
 }

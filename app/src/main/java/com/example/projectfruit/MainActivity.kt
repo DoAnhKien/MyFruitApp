@@ -2,6 +2,7 @@ package com.example.projectfruit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectfruit.adapter.FruitCategoryAdapter
@@ -179,27 +180,33 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(pair: Pair<Fruit, Constant.KeyEvent>) {
-        when (pair.second) {
+    fun onMessageEvent(triple: Triple<Fruit, Constant.KeyEvent, FruitCategory>) {
+        when (triple.second) {
             Constant.KeyEvent.UPDATE_FRUIT -> {
-                openDialogEditFruit(pair.first)
+                openDialogEditFruit(triple.first, triple.third)
             }
             Constant.KeyEvent.DELETE_FRUIT -> {
-                viewModel.deleteFruit(pair.first)
+                viewModel.deleteFruit(triple.first, triple.third)
             }
         }
     }
 
-    private fun openDialogEditFruit(fruit: Fruit) {
+    private fun openDialogEditFruit(fruit: Fruit, fruitCategory: FruitCategory) {
         val fruitListener: CustomDialogFruit.DialogFruitListener =
             object : CustomDialogFruit.DialogFruitListener {
 
                 override fun nameEntered(name: String, price: Int) {
                     viewModel.updateFruit(name = name, price = price, id = fruit.id)
+                    viewModel.updateDataForFirebase(fruitCategory.nameCategory ?: "", fruit)
                     Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG).show()
                 }
             }
         val dialog = CustomDialogFruit(this, fruitListener, fruit)
         dialog.show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.getMCategory().removeObserver { }
     }
 }
