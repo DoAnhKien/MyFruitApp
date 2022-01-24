@@ -33,14 +33,15 @@ class CustomDialogCategory(
         val btnSubmit = findViewById<Button>(R.id.btn_submit)
 
         edtPrice.visibility = View.GONE
-        tvTitle.text = "Nhập tên danh  mục:"
-        edtName.hint = "Tên danh  mục"
+        tvTitle.text = context.getString(R.string.input_category_info)
+        edtName.hint = context.getString(R.string.name_category)
 
         btnSubmit.setOnClickListener {
             val name: String = edtName.text.toString()
 
             if (name.isEmpty()) {
-                Toast.makeText(context, "Vui lòng nhập lại!", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.please_input_info)
+                    , Toast.LENGTH_LONG).show()
             } else {
                 dialogListener.nameEntered(name)
                 dismiss()

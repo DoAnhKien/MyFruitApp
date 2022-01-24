@@ -33,9 +33,9 @@ class CustomDialogFruit(
 
         btnSubmit.setOnClickListener {
             if (edtName.text.toString().isNullOrEmpty() || edtPrice.text.toString()
-                    .isNullOrEmpty()
-            ) {
-                Toast.makeText(context, "Vui lòng nhập lại!", Toast.LENGTH_LONG).show()
+                    .isNullOrEmpty()) {
+                Toast.makeText(context, context.getString(R.string.please_input_info),
+                    Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             val name: String = edtName.text.toString()

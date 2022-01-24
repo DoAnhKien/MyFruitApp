@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">projectFruit</string>
     <string name="save_success">Lưu thành công</string>
+    <string name="please_input_info">Vui lòng nhập lại!</string>
+    <string name="name_category">Tên danh  mục</string>
+    <string name="input_category_info">Nhập tên danh  mục:</string>
+    <string name="input_fruit_info">Nhập tên trái cây:</string>
+    <string name="name_fruit">Tên trái cây</string>
+    <string name="price">Giá</string>
+    <string name="submit">Xác nhận</string>
+    <string name="cancel">Huỷ</string>
 </resources>
