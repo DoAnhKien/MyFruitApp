@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                                 idFruitCategory = it
                             )
                         )
-                        Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG)
+                        Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG)
                             .show()
                         viewModel.addNewFruitOnFirebase(
                             categoryName, fruit = Fruit(
@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
                 override fun nameEntered(name: String) {
                     viewModel.insertCategory(FruitCategory(nameCategory = name))
-                    Toast.makeText(this@MainActivity, "Tên danh : $name", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG).show()
                     viewModel.addNewCategory(name)
                     viewModel.getDataFromFirebase()
                 }
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
                 override fun nameEntered(name: String, price: Int) {
                     viewModel.updateFruit(name = name, price = price, id = fruit.id)
-                    Toast.makeText(this@MainActivity, "Lưu thành công", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.save_success), Toast.LENGTH_LONG).show()
                 }
             }
         val dialog = CustomDialogFruit(this, fruitListener, fruit)

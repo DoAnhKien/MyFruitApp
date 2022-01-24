@@ -11,7 +11,7 @@
         android:id="@+id/swipe_reveal_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EEEEEE"
+        android:background="@color/color_EEEEEE"
         app:dragEdge="right"
         app:mode="same_level">
 
@@ -78,7 +78,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:gravity="end"
-                android:text="10000"
+                tools:text="10000"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
