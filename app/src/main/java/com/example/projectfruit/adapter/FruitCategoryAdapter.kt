@@ -10,14 +10,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectfruit.R
-import com.example.projectfruit.model.Fruit
 import com.example.projectfruit.model.FruitCategoryAndFruits
 
 class FruitCategoryAdapter(
     private val mContext: Context,
     private val itemListener: FruitCategoryListener
 ) :
-    RecyclerView.Adapter<FruitCategoryAdapter.RecyclerViewHolder>(), OnItemFruitCategoryClick {
+    RecyclerView.Adapter<FruitCategoryAdapter.RecyclerViewHolder>() {
 
     var mListFruitCategory: List<FruitCategoryAndFruits>? = null
 
@@ -81,13 +80,5 @@ class FruitCategoryAdapter(
 
     interface FruitCategoryListener {
         fun onClickListener(id: Int?, name: String)
-    }
-
-    override fun onClick(position: Int, fruitData: Fruit) {
-
-    }
-
-    override fun onLongClick(position: Int, fruitData: Fruit) {
-
     }
 }
