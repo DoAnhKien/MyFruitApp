@@ -121,8 +121,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 val fruits: MutableList<Fruit> = arrayListOf()
                 listFruit.forEachIndexed { index, fruit ->
                     if (fruit.name?.lowercase(Locale.getDefault())
-                            ?.contains(name.lowercase(Locale.getDefault())) == true
-                    ) {
+                            ?.contains(name.lowercase(Locale.getDefault())) == true) {
                         fruits.add(fruit)
                     }
                     if (index == listFruit.size - 1 && fruits.isNotEmpty()) {
