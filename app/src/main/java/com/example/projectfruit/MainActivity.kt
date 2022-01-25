@@ -11,20 +11,25 @@ import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.projectfruit.common.Constant
-import com.example.projectfruit.dialog.CustomDialogCategory
-import com.example.projectfruit.dialog.CustomDialogFruit
 import com.example.projectfruit.model.FruitCategoryAndFruits
 import com.google.android.material.appbar.MaterialToolbar
 import com.example.projectfruit.viewmodel.MainViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import android.text.TextUtils
+import android.text.Editable
+import android.view.View
+import com.example.projectfruit.customer.CustomTextWatcher
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryListener {
@@ -137,51 +142,108 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     }
 
     private fun openDialogAddFruit(id: Int?, categoryName: String) {
-        val fruitListener: CustomDialogFruit.DialogFruitListener =
-            object : CustomDialogFruit.DialogFruitListener {
-
-                override fun nameEntered(name: String, price: Int) {
-                    id?.let {
-                        viewModel.insertFruit(
-                            Fruit(
-                                name = name,
-                                price = price,
-                                idFruitCategory = it
-                            )
-                        )
-                        Toast.makeText(
-                            this@MainActivity,
-                            getString(R.string.save_success),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        viewModel.addNewFruitOnFirebase(
-                            categoryName, viewModel.getTheLastFruitItem()
-                        )
-                    }
-                }
+        var name = ""
+        var price = 0
+        val build = MaterialAlertDialogBuilder(this)
+        build.setTitle(resources.getString(R.string.input_product_info))
+        build.setView(R.layout.layout_custom_dialog)
+        build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
+            id?.let {
+                viewModel.insertFruit(
+                    Fruit(
+                        name = name,
+                        price = price,
+                        idFruitCategory = it
+                    )
+                )
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.save_success),
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                viewModel.addNewFruitOnFirebase(
+                    categoryName, viewModel.getTheLastFruitItem()
+                )
+                dialog.dismiss()
             }
-        val dialog = CustomDialogFruit(this, fruitListener, null)
+        }
+        build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        build.setView(R.layout.layout_custom_dialog)
+        val dialog: AlertDialog = build.create()
         dialog.show()
+
+        val edtName = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_name)
+        val edtPrice = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_price)
+        var isPrice = false
+        var isName = false
+        (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+
+        edtName?.addTextChangedListener(object : CustomTextWatcher(){
+            override fun afterTextChanged(p0: Editable?) {
+                if (TextUtils.isEmpty(p0)){
+                    isName = false
+                } else {
+                    isName = true
+                    name = p0.toString()
+                }
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = isName && isPrice
+            }
+        })
+
+        edtPrice?.addTextChangedListener(object : CustomTextWatcher(){
+            override fun afterTextChanged(p0: Editable?) {
+                if (TextUtils.isEmpty(p0)){
+                    isPrice = false
+                } else {
+                    isPrice = true
+                    price = p0.toString().toInt()
+                }
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = isName && isPrice
+            }
+        })
     }
 
     private fun openDialogAddCategory() {
-        val categoryListener: CustomDialogCategory.DialogCategoryListener =
-            object : CustomDialogCategory.DialogCategoryListener {
-
-                override fun nameEntered(name: String) {
-                    viewModel.insertCategory(FruitCategory(nameCategory = name))
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.save_success),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.addNewCategory(name)
-                }
-
-            }
-        val dialog = CustomDialogCategory(this, categoryListener)
+        var name = ""
+        val build = MaterialAlertDialogBuilder(this)
+        build.setTitle(resources.getString(R.string.input_category_info))
+        build.setView(R.layout.layout_custom_dialog)
+        build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
+            viewModel.insertCategory(FruitCategory(nameCategory = name))
+            Toast.makeText(
+                this@MainActivity,
+                getString(R.string.save_success),
+                Toast.LENGTH_LONG
+            ).show()
+            viewModel.addNewCategory(name)
+            dialog.dismiss()
+        }
+        build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        build.setView(R.layout.layout_custom_dialog)
+        val dialog: AlertDialog = build.create()
         dialog.show()
+
+        val edtName = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_name)
+        val edtPrice = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_price)
+        edtPrice?.visibility = View.GONE
+        edtName?.hint = getString(R.string.hint_text_name_category)
+        (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+
+        edtName?.addTextChangedListener(object : CustomTextWatcher(){
+            override fun afterTextChanged(p0: Editable?) {
+                if (TextUtils.isEmpty(p0)){
+                    (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+                } else {
+                    (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = true
+                    name = p0.toString()
+                }
+            }
+        })
     }
 
     override fun onClickListener(id: Int?, name: String) {
@@ -211,21 +273,60 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     }
 
     private fun openDialogEditFruit(fruit: Fruit, fruitCategory: FruitCategory) {
-        val fruitListener: CustomDialogFruit.DialogFruitListener =
-            object : CustomDialogFruit.DialogFruitListener {
-
-                override fun nameEntered(name: String, price: Int) {
-                    viewModel.updateFruit(name = name, price = price, id = fruit.id)
-                    viewModel.updateDataForFirebase(fruitCategory.nameCategory ?: "", fruit)
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.save_success),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        val dialog = CustomDialogFruit(this, fruitListener, fruit)
+        val build = MaterialAlertDialogBuilder(this)
+        build.setTitle(resources.getString(R.string.input_product_info))
+        build.setView(R.layout.layout_custom_dialog)
+        build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
+            viewModel.updateFruit(
+                name = fruit.name,
+                price = fruit.price,
+                id = fruit.id
+            )
+            viewModel.updateDataForFirebase(fruitCategory.nameCategory ?: "", fruit)
+            Toast.makeText(
+                this, getString(R.string.save_success),
+                Toast.LENGTH_LONG
+            ).show()
+            dialog.dismiss()
+        }
+        build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        build.setView(R.layout.layout_custom_dialog)
+        val dialog: AlertDialog = build.create()
         dialog.show()
+
+        val edtName = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_name)
+        val edtPrice = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_price)
+        var isPrice = true
+        var isName = true
+        edtName?.setText(fruit.name)
+        edtPrice?.setText(fruit.price.toString())
+        (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = true
+
+        edtName?.addTextChangedListener(object : CustomTextWatcher(){
+            override fun afterTextChanged(p0: Editable?) {
+                if (TextUtils.isEmpty(p0)){
+                    isName = false
+                } else {
+                    isName = true
+                    fruit.name = p0.toString()
+                }
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = isName && isPrice
+            }
+        })
+
+        edtPrice?.addTextChangedListener(object : CustomTextWatcher(){
+            override fun afterTextChanged(p0: Editable?) {
+                if (TextUtils.isEmpty(p0)){
+                    isPrice = false
+                } else {
+                    isPrice = true
+                    fruit.price = p0.toString().toInt()
+                }
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = isName && isPrice
+            }
+        })
     }
 
     override fun onDestroy() {
