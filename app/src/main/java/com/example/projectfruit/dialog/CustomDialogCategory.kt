@@ -34,7 +34,7 @@ class CustomDialogCategory(
 
         edtPrice.visibility = View.GONE
         tvTitle.text = context.getString(R.string.input_category_info)
-        edtName.hint = context.getString(R.string.name_category)
+        edtName.hint = context.getString(R.string.hint_text_name_category)
 
         btnSubmit.setOnClickListener {
             val name: String = edtName.text.toString()

@@ -18,17 +18,18 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:text="@string/input_fruit_info"
+            android:text="@string/input_product_info"
             android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <EditText
             android:id="@+id/edt_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:hint="@string/name_fruit"
+            android:hint="@string/hint_text_name_product"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,26 +40,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:hint="@string/price"
+            android:hint="@string/hint_text_price"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_name" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@drawable/bg_cancel"
             android:text="@string/cancel"
+            android:textStyle="bold"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_price" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,9 +67,9 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
-            android:background="@drawable/bg_confirm"
             android:text="@string/submit"
             android:textColor="@color/white"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
             app:layout_constraintTop_toBottomOf="@+id/edt_price"
             app:layout_constraintBottom_toBottomOf="parent" />
