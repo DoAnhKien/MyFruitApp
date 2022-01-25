@@ -9,8 +9,18 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item
-        android:id="@+id/menu_more"
-        android:title="Thêm danh mục"
+        android:id="@+id/mn_add_category"
+        android:title="@string/add_category_info"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mn_edit_category"
+        android:title="@string/edit_category_info"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mn_delete_category"
+        android:title="@string/delete_category_info"
         app:showAsAction="never" />
 
 </menu>

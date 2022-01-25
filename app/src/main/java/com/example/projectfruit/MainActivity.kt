@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
         topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.menu_more -> {
+                R.id.mn_add_category -> {
                     openDialogAddCategory()
                     true
                 }
@@ -177,6 +177,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
         val edtName = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_name)
         val edtPrice = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_price)
+        edtPrice?.visibility = View.VISIBLE
         var isPrice = false
         var isName = false
         (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
@@ -209,7 +210,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     private fun openDialogAddCategory() {
         var name = ""
         val build = MaterialAlertDialogBuilder(this)
-        build.setTitle(resources.getString(R.string.input_category_info))
+        build.setTitle(resources.getString(R.string.add_category_info))
         build.setView(R.layout.layout_custom_dialog)
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             viewModel.insertCategory(FruitCategory(nameCategory = name))
@@ -229,8 +230,6 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         dialog.show()
 
         val edtName = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_name)
-        val edtPrice = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_price)
-        edtPrice?.visibility = View.GONE
         edtName?.hint = getString(R.string.hint_text_name_category)
         (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
 
@@ -298,6 +297,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
         val edtName = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_name)
         val edtPrice = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_price)
+        edtPrice?.visibility = View.VISIBLE
         var isPrice = true
         var isName = true
         edtName?.setText(fruit.name)

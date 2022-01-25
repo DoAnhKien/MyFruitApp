@@ -30,7 +30,8 @@
             android:layout_marginTop="8dp"
             android:hint="@string/hint_text_price"
             android:inputType="number"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 </layout>

@@ -3,7 +3,9 @@
     <string name="save_success">Lưu thành công</string>
     <string name="please_input_info">Vui lòng nhập lại!</string>
     <string name="hint_text_name_category">Nhập danh mục</string>
-    <string name="input_category_info">Thêm danh mục</string>
+    <string name="add_category_info">Thêm danh mục</string>
+    <string name="edit_category_info">Sửa danh mục</string>
+    <string name="delete_category_info">Xoá danh mục</string>
     <string name="input_product_info">Thêm sản phẩm</string>
     <string name="hint_text_name_product">Nhập sản phẩm</string>
     <string name="hint_text_price">Nhập giá</string>
