@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode
 import android.text.TextUtils
 import android.text.Editable
 import android.view.View
+import android.view.WindowManager
 import com.example.projectfruit.customer.CustomTextWatcher
 
 @AndroidEntryPoint
@@ -61,6 +62,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
     }
 
     private fun initViews() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = resources.getColor(R.color.purple_500)
         dialog.show(fManager, "")
         rcvFruitCategory = findViewById(R.id.rcv_fruit_category)
         edtSearch = findViewById(R.id.menu_search)
@@ -111,6 +115,10 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             when (menuItem.itemId) {
                 R.id.mn_add_category -> {
                     openDialogAddCategory()
+                    true
+                }
+                R.id.menu_search -> {
+
                     true
                 }
                 else -> false
