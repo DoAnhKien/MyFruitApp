@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">projectFruit</string>
     <string name="save_success">Lưu thành công</string>
+    <string name="delete_success">Xoá thành công</string>
     <string name="please_input_info">Vui lòng nhập lại!</string>
     <string name="hint_text_name_category">Nhập danh mục</string>
     <string name="add_category_info">Thêm danh mục</string>

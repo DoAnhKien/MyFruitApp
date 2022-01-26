@@ -53,4 +53,7 @@ interface FruitDao {
     @Query("DELETE FROM Fruit")
     suspend fun deleteAllFruit()
 
+    @Query("DELETE FROM FRUIT WHERE idFruitCategory = :id")
+    suspend fun deleteAllFruitOfCategory(id: Int)
+
 }

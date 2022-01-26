@@ -43,6 +43,18 @@ class MainViewModel @ViewModelInject constructor(
         fruitDao.insertFruit(data)
     }
 
+    fun updateCategory(data: FruitCategory) = viewModelScope.launch {
+        fruitDao.updateFruitCategory(data)
+    }
+
+    fun deleteCategory(data: FruitCategory) = viewModelScope.launch {
+        fruitDao.deleteFruitCategory(data)
+    }
+
+    fun deleteAllFruitOfCategory(id: Int) = viewModelScope.launch {
+        fruitDao.deleteAllFruitOfCategory(id)
+    }
+
     fun getTheLastFruitItem() = fruitDao.getTheLastFruitItem()
 
     fun updateDataToFirebase(title: String, key: String, fruit: Fruit) = viewModelScope.launch {

@@ -31,6 +31,10 @@ import android.text.Editable
 import android.text.Html
 import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.Spinner
+import androidx.appcompat.widget.AppCompatSpinner
+import com.example.projectfruit.adapter.SpinnerCategoryAdapter
 import com.example.projectfruit.customer.CustomTextWatcher
 
 @AndroidEntryPoint
@@ -119,11 +123,138 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                     openDialogAddCategory()
                     true
                 }
-                R.id.menu_search -> {
-
+                R.id.mn_edit_category -> {
+                    openDialogEditCategory()
+                    true
+                }
+                R.id.mn_delete_category -> {
+                    openDialogDeleteCategory()
                     true
                 }
                 else -> false
+            }
+        }
+    }
+
+    private fun openDialogEditCategory(){
+        var name = ""
+        var fruitCategory: FruitCategory? = null
+        var isSelect = false
+        var isName = false
+        val listCategorySpinner : MutableList<FruitCategoryAndFruits> = mutableListOf()
+        listCategorySpinner.add(
+            FruitCategoryAndFruits(
+                FruitCategory(
+                    null,
+                    "--- Mời bạn chọn ---",
+                    false
+                ), null
+            )
+        )
+        listCategorySpinner.addAll(listFruitCategory)
+
+        val build = MaterialAlertDialogBuilder(this)
+        build.setTitle(resources.getString(R.string.edit_category_info))
+        build.setView(R.layout.layout_spinner)
+        build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
+            fruitCategory?.nameCategory = name
+            fruitCategory?.let {
+                viewModel.updateCategory(it)
+            }
+            Toast.makeText(this@MainActivity, getString(R.string.save_success),
+                Toast.LENGTH_LONG).show()
+            dialog.dismiss()
+        }
+        build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = build.create()
+        dialog.show()
+
+        (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+        val spnCategory = (dialog as? AlertDialog)?.findViewById<Spinner>(R.id.spn_category)
+        val edtCategory = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_category)
+        val categorySpinnerAdapter = SpinnerCategoryAdapter(this, listCategorySpinner)
+        edtCategory?.visibility = View.VISIBLE
+        spnCategory?.adapter = categorySpinnerAdapter
+        spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                fruitCategory = (categorySpinnerAdapter.getItem(p2) as FruitCategoryAndFruits).fruitCategory
+                isSelect = if (fruitCategory?.id == null) {
+                    edtCategory?.text?.clear()
+                    false
+                } else {
+                    edtCategory?.setText(fruitCategory?.nameCategory)
+                    true
+                }
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = isName && isSelect
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+        edtCategory?.addTextChangedListener(object : CustomTextWatcher(){
+            override fun afterTextChanged(p0: Editable?) {
+                if (TextUtils.isEmpty(p0)){
+                    isName = false
+                } else {
+                    isName = true
+                    name = p0.toString()
+                }
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = isName && isSelect
+            }
+        })
+    }
+
+    private fun openDialogDeleteCategory(){
+        var fruitCategory: FruitCategory? = null
+        val listCategorySpinner : MutableList<FruitCategoryAndFruits> = mutableListOf()
+        listCategorySpinner.add(
+            FruitCategoryAndFruits(
+                FruitCategory(
+                    null,
+                    "--- Mời bạn chọn ---",
+                    false
+                ), null
+            )
+        )
+        listCategorySpinner.addAll(listFruitCategory)
+
+        val build = MaterialAlertDialogBuilder(this)
+        build.setTitle(resources.getString(R.string.delete_category_info))
+        build.setView(R.layout.layout_spinner)
+        build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
+            fruitCategory?.let {
+                viewModel.deleteCategory(it)
+                it.id?.let { id ->
+                    viewModel.deleteAllFruitOfCategory(id)
+                }
+                Toast.makeText(this, getString(R.string.delete_success),
+                    Toast.LENGTH_LONG).show()
+                dialog.dismiss()
+            }
+        }
+        build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = build.create()
+        dialog.show()
+        (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+
+        val spnCategory = (dialog as? AlertDialog)?.findViewById<Spinner>(R.id.spn_category)
+        val categorySpinnerAdapter = SpinnerCategoryAdapter(this, listCategorySpinner)
+        spnCategory?.adapter = categorySpinnerAdapter
+        spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                fruitCategory = (categorySpinnerAdapter.getItem(p2) as FruitCategoryAndFruits).fruitCategory
+                (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled =
+                    fruitCategory?.id != null
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
             }
         }
     }
@@ -135,8 +266,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 val fruits: MutableList<Fruit> = arrayListOf()
                 listFruit.forEachIndexed { index, fruit ->
                     if (fruit.name?.lowercase(Locale.getDefault())
-                            ?.contains(name.lowercase(Locale.getDefault())) == true
-                    ) {
+                            ?.contains(name.lowercase(Locale.getDefault())) == true) {
                         fruits.add(fruit)
                     }
                     if (index == listFruit.size - 1 && fruits.isNotEmpty()) {
@@ -159,29 +289,16 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setView(R.layout.layout_custom_dialog)
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             id?.let {
-                viewModel.insertFruit(
-                    Fruit(
-                        name = name,
-                        price = price,
-                        idFruitCategory = it
-                    )
-                )
-                Toast.makeText(
-                    this@MainActivity,
-                    getString(R.string.save_success),
-                    Toast.LENGTH_LONG
-                )
-                    .show()
-                viewModel.addNewFruitOnFirebase(
-                    categoryName, viewModel.getTheLastFruitItem()
-                )
+                viewModel.insertFruit(Fruit(name = name, price = price, idFruitCategory = it))
+                Toast.makeText(this, getString(R.string.save_success),
+                    Toast.LENGTH_LONG).show()
+                viewModel.addNewFruitOnFirebase(categoryName, viewModel.getTheLastFruitItem())
                 dialog.dismiss()
             }
         }
         build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
         }
-        build.setView(R.layout.layout_custom_dialog)
         val dialog: AlertDialog = build.create()
         dialog.show()
 
@@ -224,18 +341,14 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setView(R.layout.layout_custom_dialog)
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             viewModel.insertCategory(FruitCategory(nameCategory = name))
-            Toast.makeText(
-                this@MainActivity,
-                getString(R.string.save_success),
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this@MainActivity, getString(R.string.save_success),
+                Toast.LENGTH_LONG).show()
             viewModel.addNewCategory(name)
             dialog.dismiss()
         }
         build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
         }
-        build.setView(R.layout.layout_custom_dialog)
         val dialog: AlertDialog = build.create()
         dialog.show()
 
@@ -277,6 +390,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             }
             Constant.KeyEvent.DELETE_FRUIT -> {
                 viewModel.deleteFruit(triple.first, triple.third)
+                Toast.makeText(this@MainActivity, getString(R.string.delete_success),
+                    Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -286,22 +401,14 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setTitle(resources.getString(R.string.input_product_info))
         build.setView(R.layout.layout_custom_dialog)
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
-            viewModel.updateFruit(
-                name = fruit.name,
-                price = fruit.price,
-                id = fruit.id
-            )
+            viewModel.updateFruit(name = fruit.name, price = fruit.price, id = fruit.id)
             viewModel.updateDataForFirebase(fruitCategory.nameCategory ?: "", fruit)
-            Toast.makeText(
-                this, getString(R.string.save_success),
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, getString(R.string.save_success), Toast.LENGTH_LONG).show()
             dialog.dismiss()
         }
         build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
         }
-        build.setView(R.layout.layout_custom_dialog)
         val dialog: AlertDialog = build.create()
         dialog.show()
 
