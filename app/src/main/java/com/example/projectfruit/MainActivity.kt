@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import android.text.TextUtils
 import android.text.Editable
+import android.text.Html
 import android.view.View
 import android.view.WindowManager
 import com.example.projectfruit.customer.CustomTextWatcher
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         dialog.show(fManager, "")
         rcvFruitCategory = findViewById(R.id.rcv_fruit_category)
         edtSearch = findViewById(R.id.menu_search)
+        edtSearch?.queryHint = Html.fromHtml("<font color = #ffffff>" + resources.getString(R.string.search_text) + "</font>");
         topAppBar = findViewById(R.id.top_app_bar)
         mPullToRefresh = findViewById(R.id.mRefreshMain)
         mPullToRefresh?.setOnRefreshListener {

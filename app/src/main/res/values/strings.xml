@@ -11,4 +11,5 @@
     <string name="hint_text_price">Nhập giá</string>
     <string name="submit">Đồng ý</string>
     <string name="cancel">Huỷ</string>
+    <string name="search_text">Tìm Kiếm</string>
 </resources>
