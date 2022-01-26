@@ -112,9 +112,7 @@ class MainViewModel @ViewModelInject constructor(
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 toPath.setValue(dataSnapshot.value).addOnCompleteListener { task ->
                     if (task.isComplete) {
-                        Log.d("kienda", "Success!")
-                    } else {
-                        Log.d("kienda", "Copy failed!")
+                        refProduct.child(fromPathInput).removeValue()
                     }
                 }
             }
@@ -122,7 +120,6 @@ class MainViewModel @ViewModelInject constructor(
             override fun onCancelled(databaseError: DatabaseError) {}
         }
         fromPath.addListenerForSingleValueEvent(valueEventListener)
-        refProduct.child(fromPathInput).removeValue()
     }
 
     fun updateDataForFirebase(title: String, fruit: Fruit) {

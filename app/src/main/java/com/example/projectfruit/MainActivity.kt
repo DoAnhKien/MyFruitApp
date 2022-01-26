@@ -161,8 +161,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             fruitCategory?.nameCategory = name
             fruitCategory?.let {
-                viewModel.updateCategoryForFirebase(nameBeforeSelected, name)
-//                viewModel.updateCategory(it)
+//                viewModel.updateCategoryForFirebase(nameBeforeSelected, name)
+                viewModel.updateCategory(it)
             }
             Toast.makeText(
                 this@MainActivity, getString(R.string.save_success),
