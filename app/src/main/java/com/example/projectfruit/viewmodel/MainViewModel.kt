@@ -12,6 +12,7 @@ import com.example.projectfruit.model.FruitCategoryAndFruits
 import com.google.firebase.database.*
 import kotlinx.coroutines.launch
 
+
 class MainViewModel @ViewModelInject constructor(
     private val fruitDao: FruitDao
 ) : ViewModel() {
@@ -95,6 +96,33 @@ class MainViewModel @ViewModelInject constructor(
 
     fun updateFruit(id: Int?, name: String?, price: Int?) = viewModelScope.launch {
         fruitDao.updateFruit(id, name, price)
+    }
+
+    fun deleteCategoryForFirebase(title: String) {
+        refProduct.child(title).removeValue()
+    }
+
+    fun updateCategoryForFirebase(
+        fromPathInput: String,
+        toPathInput: String
+    ) {
+        val fromPath: DatabaseReference = refProduct.child(fromPathInput)
+        val toPath: DatabaseReference = refProduct.child(toPathInput)
+        val valueEventListener: ValueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                toPath.setValue(dataSnapshot.value).addOnCompleteListener { task ->
+                    if (task.isComplete) {
+                        Log.d("kienda", "Success!")
+                    } else {
+                        Log.d("kienda", "Copy failed!")
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+        fromPath.addListenerForSingleValueEvent(valueEventListener)
+        refProduct.child(fromPathInput).removeValue()
     }
 
     fun updateDataForFirebase(title: String, fruit: Fruit) {

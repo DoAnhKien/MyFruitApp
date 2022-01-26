@@ -73,7 +73,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         dialog.show(fManager, "")
         rcvFruitCategory = findViewById(R.id.rcv_fruit_category)
         edtSearch = findViewById(R.id.menu_search)
-        edtSearch?.queryHint = Html.fromHtml("<font color = #ffffff>" + resources.getString(R.string.search_text) + "</font>");
+        edtSearch?.queryHint =
+            Html.fromHtml("<font color = #ffffff>" + resources.getString(R.string.search_text) + "</font>");
         topAppBar = findViewById(R.id.top_app_bar)
         mPullToRefresh = findViewById(R.id.mRefreshMain)
         mPullToRefresh?.setOnRefreshListener {
@@ -86,14 +87,14 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         mAdapter = FruitCategoryAdapter(applicationContext, this)
         rcvFruitCategory?.layoutManager = LinearLayoutManager(applicationContext)
         rcvFruitCategory?.adapter = mAdapter
-        viewModel.getMCategory().observe(this, {
+        viewModel.getMCategory().observe(this) {
             listFruitCategory.clear()
             listFruitCategory.addAll(it)
             mAdapter?.setListFruitCategory(it)
             if (!it.isNullOrEmpty()) {
                 dialog.dismiss()
             }
-        })
+        }
         viewModel.getDataFromFirebase()
     }
 
@@ -136,12 +137,13 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         }
     }
 
-    private fun openDialogEditCategory(){
+    private fun openDialogEditCategory() {
         var name = ""
         var fruitCategory: FruitCategory? = null
         var isSelect = false
         var isName = false
-        val listCategorySpinner : MutableList<FruitCategoryAndFruits> = mutableListOf()
+        var nameBeforeSelected = ""
+        val listCategorySpinner: MutableList<FruitCategoryAndFruits> = mutableListOf()
         listCategorySpinner.add(
             FruitCategoryAndFruits(
                 FruitCategory(
@@ -159,10 +161,13 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             fruitCategory?.nameCategory = name
             fruitCategory?.let {
-                viewModel.updateCategory(it)
+                viewModel.updateCategoryForFirebase(nameBeforeSelected, name)
+//                viewModel.updateCategory(it)
             }
-            Toast.makeText(this@MainActivity, getString(R.string.save_success),
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this@MainActivity, getString(R.string.save_success),
+                Toast.LENGTH_LONG
+            ).show()
             dialog.dismiss()
         }
         build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
@@ -173,17 +178,20 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 
         (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
         val spnCategory = (dialog as? AlertDialog)?.findViewById<Spinner>(R.id.spn_category)
-        val edtCategory = (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_category)
+        val edtCategory =
+            (dialog as? AlertDialog)?.findViewById<TextInputEditText>(R.id.edt_category)
         val categorySpinnerAdapter = SpinnerCategoryAdapter(this, listCategorySpinner)
         edtCategory?.visibility = View.VISIBLE
         spnCategory?.adapter = categorySpinnerAdapter
-        spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                fruitCategory = (categorySpinnerAdapter.getItem(p2) as FruitCategoryAndFruits).fruitCategory
+                fruitCategory =
+                    (categorySpinnerAdapter.getItem(p2) as FruitCategoryAndFruits).fruitCategory
                 isSelect = if (fruitCategory?.id == null) {
                     edtCategory?.text?.clear()
                     false
                 } else {
+                    nameBeforeSelected = fruitCategory?.nameCategory ?: ""
                     edtCategory?.setText(fruitCategory?.nameCategory)
                     true
                 }
@@ -195,9 +203,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             }
         }
 
-        edtCategory?.addTextChangedListener(object : CustomTextWatcher(){
+        edtCategory?.addTextChangedListener(object : CustomTextWatcher() {
             override fun afterTextChanged(p0: Editable?) {
-                if (TextUtils.isEmpty(p0)){
+                if (TextUtils.isEmpty(p0)) {
                     isName = false
                 } else {
                     isName = true
@@ -208,9 +216,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         })
     }
 
-    private fun openDialogDeleteCategory(){
+    private fun openDialogDeleteCategory() {
         var fruitCategory: FruitCategory? = null
-        val listCategorySpinner : MutableList<FruitCategoryAndFruits> = mutableListOf()
+        val listCategorySpinner: MutableList<FruitCategoryAndFruits> = mutableListOf()
         listCategorySpinner.add(
             FruitCategoryAndFruits(
                 FruitCategory(
@@ -230,9 +238,12 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 viewModel.deleteCategory(it)
                 it.id?.let { id ->
                     viewModel.deleteAllFruitOfCategory(id)
+//                    viewModel.deleteCategoryForFirebase(it.nameCategory!!)
                 }
-                Toast.makeText(this, getString(R.string.delete_success),
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this, getString(R.string.delete_success),
+                    Toast.LENGTH_LONG
+                ).show()
                 dialog.dismiss()
             }
         }
@@ -246,9 +257,10 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         val spnCategory = (dialog as? AlertDialog)?.findViewById<Spinner>(R.id.spn_category)
         val categorySpinnerAdapter = SpinnerCategoryAdapter(this, listCategorySpinner)
         spnCategory?.adapter = categorySpinnerAdapter
-        spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                fruitCategory = (categorySpinnerAdapter.getItem(p2) as FruitCategoryAndFruits).fruitCategory
+                fruitCategory =
+                    (categorySpinnerAdapter.getItem(p2) as FruitCategoryAndFruits).fruitCategory
                 (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled =
                     fruitCategory?.id != null
             }
@@ -266,7 +278,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 val fruits: MutableList<Fruit> = arrayListOf()
                 listFruit.forEachIndexed { index, fruit ->
                     if (fruit.name?.lowercase(Locale.getDefault())
-                            ?.contains(name.lowercase(Locale.getDefault())) == true) {
+                            ?.contains(name.lowercase(Locale.getDefault())) == true
+                    ) {
                         fruits.add(fruit)
                     }
                     if (index == listFruit.size - 1 && fruits.isNotEmpty()) {
@@ -290,8 +303,10 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             id?.let {
                 viewModel.insertFruit(Fruit(name = name, price = price, idFruitCategory = it))
-                Toast.makeText(this, getString(R.string.save_success),
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this, getString(R.string.save_success),
+                    Toast.LENGTH_LONG
+                ).show()
                 viewModel.addNewFruitOnFirebase(categoryName, viewModel.getTheLastFruitItem())
                 dialog.dismiss()
             }
@@ -309,9 +324,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         var isName = false
         (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
 
-        edtName?.addTextChangedListener(object : CustomTextWatcher(){
+        edtName?.addTextChangedListener(object : CustomTextWatcher() {
             override fun afterTextChanged(p0: Editable?) {
-                if (TextUtils.isEmpty(p0)){
+                if (TextUtils.isEmpty(p0)) {
                     isName = false
                 } else {
                     isName = true
@@ -321,9 +336,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             }
         })
 
-        edtPrice?.addTextChangedListener(object : CustomTextWatcher(){
+        edtPrice?.addTextChangedListener(object : CustomTextWatcher() {
             override fun afterTextChanged(p0: Editable?) {
-                if (TextUtils.isEmpty(p0)){
+                if (TextUtils.isEmpty(p0)) {
                     isPrice = false
                 } else {
                     isPrice = true
@@ -341,8 +356,10 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setView(R.layout.layout_custom_dialog)
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             viewModel.insertCategory(FruitCategory(nameCategory = name))
-            Toast.makeText(this@MainActivity, getString(R.string.save_success),
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this@MainActivity, getString(R.string.save_success),
+                Toast.LENGTH_LONG
+            ).show()
             viewModel.addNewCategory(name)
             dialog.dismiss()
         }
@@ -356,9 +373,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         edtName?.hint = getString(R.string.hint_text_name_category)
         (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
 
-        edtName?.addTextChangedListener(object : CustomTextWatcher(){
+        edtName?.addTextChangedListener(object : CustomTextWatcher() {
             override fun afterTextChanged(p0: Editable?) {
-                if (TextUtils.isEmpty(p0)){
+                if (TextUtils.isEmpty(p0)) {
                     (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
                 } else {
                     (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = true
@@ -390,8 +407,10 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             }
             Constant.KeyEvent.DELETE_FRUIT -> {
                 viewModel.deleteFruit(triple.first, triple.third)
-                Toast.makeText(this@MainActivity, getString(R.string.delete_success),
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@MainActivity, getString(R.string.delete_success),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -421,9 +440,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         edtPrice?.setText(fruit.price.toString())
         (dialog).getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = true
 
-        edtName?.addTextChangedListener(object : CustomTextWatcher(){
+        edtName?.addTextChangedListener(object : CustomTextWatcher() {
             override fun afterTextChanged(p0: Editable?) {
-                if (TextUtils.isEmpty(p0)){
+                if (TextUtils.isEmpty(p0)) {
                     isName = false
                 } else {
                     isName = true
@@ -433,9 +452,9 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             }
         })
 
-        edtPrice?.addTextChangedListener(object : CustomTextWatcher(){
+        edtPrice?.addTextChangedListener(object : CustomTextWatcher() {
             override fun afterTextChanged(p0: Editable?) {
-                if (TextUtils.isEmpty(p0)){
+                if (TextUtils.isEmpty(p0)) {
                     isPrice = false
                 } else {
                     isPrice = true
