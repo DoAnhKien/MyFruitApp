@@ -85,7 +85,7 @@ class MainViewModel @ViewModelInject constructor(
         fruitDao.updateFruit(id, name, price)
     }
 
-    fun updateDataForFirebase(title: String, fruit: Fruit) = viewModelScope.launch {
+    fun updateDataForFirebase(title: String, fruit: Fruit) {
         val fruitHashMap: HashMap<String, String> = HashMap<String, String>()
         val fruitHashMapInt: HashMap<String, Int> = HashMap<String, Int>()
         fruitHashMap["name"] = fruit.name.toString()
