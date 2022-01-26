@@ -49,7 +49,7 @@ class MainViewModel @ViewModelInject constructor(
         refProduct.child(title).child(key).setValue(fruit)
     }
 
-    fun addNewFruitOnFirebase(title: String, fruit: Fruit) = viewModelScope.launch {
+    fun addNewFruitOnFirebase(title: String, fruit: Fruit) {
         refProduct.child(title).push().setValue(fruit)
     }
 
