@@ -66,7 +66,7 @@ class MainViewModel @ViewModelInject constructor(
         refProduct.child(title).push().setValue(fruit)
     }
 
-    fun addNewCategory(category: String) {
+    fun addNewCategory(category: String) = viewModelScope.launch {
         refProduct.child(category).setValue(category)
     }
 
