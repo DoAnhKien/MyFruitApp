@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="14dp"
     android:paddingStart="20dp"
+    android:paddingTop="14dp"
     android:paddingEnd="20dp">
 
     <Spinner
         android:id="@+id/spn_category"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_spinner" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edt_category"
@@ -20,6 +21,6 @@
         android:hint="@string/hint_text_name_category"
         android:inputType="textPersonName"
         android:textSize="14sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>
