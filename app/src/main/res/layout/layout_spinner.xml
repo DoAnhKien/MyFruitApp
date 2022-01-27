@@ -8,18 +8,17 @@
     android:paddingTop="14dp"
     android:paddingEnd="20dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_spinner"
-        android:orientation="horizontal">
+        android:background="@drawable/bg_spinner">
 
         <Spinner
             android:id="@+id/spn_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edt_category"
