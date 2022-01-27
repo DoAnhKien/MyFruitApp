@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 dialog.dismiss()
             }
         }
-        viewModel.getDataFromFirebase()
+    //    viewModel.getDataFromFirebase()
     }
 
     private fun initAction() {

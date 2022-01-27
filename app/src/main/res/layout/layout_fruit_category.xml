@@ -55,7 +55,8 @@
             android:id="@+id/rcv_fruits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/layout_fruit"/>
+            tools:listitem="@layout/layout_fruit"
+            android:nestedScrollingEnabled="false"/>
 
 
     </LinearLayout>

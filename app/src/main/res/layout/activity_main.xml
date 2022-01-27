@@ -36,13 +36,14 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/mRefreshMain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/menu_bar">
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/menu_bar"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_fruit_category"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@+id/menu_bar"
                 tools:listitem="@layout/layout_fruit_category"/>
