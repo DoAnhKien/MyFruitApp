@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 dialog.dismiss()
             }
         }
-    //    viewModel.getDataFromFirebase()
+        viewModel.getDataFromFirebase()
     }
 
     private fun initAction() {
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             fruitCategory?.nameCategory = name
             fruitCategory?.let {
-//                viewModel.updateCategoryForFirebase(nameBeforeSelected, name)
+                viewModel.updateCategoryForFirebase(nameBeforeSelected, name)
                 viewModel.updateCategory(it)
             }
             Toast.makeText(this, getString(R.string.save_success), Toast.LENGTH_LONG).show()
@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                 viewModel.deleteCategory(it)
                 it.id?.let { id ->
                     viewModel.deleteAllFruitOfCategory(id)
-//                    viewModel.deleteCategoryForFirebase(it.nameCategory!!)
+                    viewModel.deleteCategoryForFirebase(it.nameCategory!!)
                 }
                 Toast.makeText(this, getString(R.string.delete_success),
                     Toast.LENGTH_LONG).show()

@@ -171,6 +171,7 @@ class MainViewModel @ViewModelInject constructor(
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 for (fruitData in snapshot.children) {
                                     val data = fruitData.getValue(Fruit::class.java)
+                                    data?.idFruitCategory = count
                                     insertFruit(data!!)
                                 }
                             }
