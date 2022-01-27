@@ -13,4 +13,5 @@
     <string name="submit">Đồng ý</string>
     <string name="cancel">Huỷ</string>
     <string name="search_text">Tìm Kiếm</string>
+    <string name="please_choose">--- Vui lòng chọn ---</string>
 </resources>

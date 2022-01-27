@@ -33,7 +33,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.Spinner
-import androidx.appcompat.widget.AppCompatSpinner
 import com.example.projectfruit.adapter.SpinnerCategoryAdapter
 import com.example.projectfruit.customer.CustomTextWatcher
 
@@ -148,7 +147,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             FruitCategoryAndFruits(
                 FruitCategory(
                     null,
-                    "--- Mời bạn chọn ---",
+                    getString(R.string.please_choose),
                     false
                 ), null
             )
@@ -223,7 +222,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             FruitCategoryAndFruits(
                 FruitCategory(
                     null,
-                    "--- Mời bạn chọn ---",
+                    getString(R.string.please_choose),
                     false
                 ), null
             )
