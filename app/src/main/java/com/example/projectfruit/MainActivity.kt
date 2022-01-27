@@ -163,10 +163,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
 //                viewModel.updateCategoryForFirebase(nameBeforeSelected, name)
                 viewModel.updateCategory(it)
             }
-            Toast.makeText(
-                this@MainActivity, getString(R.string.save_success),
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, getString(R.string.save_success), Toast.LENGTH_LONG).show()
             dialog.dismiss()
         }
         build.setPositiveButton(resources.getString(R.string.cancel)) { dialog, _ ->
@@ -239,10 +236,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
                     viewModel.deleteAllFruitOfCategory(id)
 //                    viewModel.deleteCategoryForFirebase(it.nameCategory!!)
                 }
-                Toast.makeText(
-                    this, getString(R.string.delete_success),
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this, getString(R.string.delete_success),
+                    Toast.LENGTH_LONG).show()
                 dialog.dismiss()
             }
         }
@@ -355,10 +350,7 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
         build.setView(R.layout.layout_custom_dialog)
         build.setNegativeButton(resources.getString(R.string.submit)) { dialog, _ ->
             viewModel.insertCategory(FruitCategory(nameCategory = name))
-            Toast.makeText(
-                this@MainActivity, getString(R.string.save_success),
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, getString(R.string.save_success), Toast.LENGTH_LONG).show()
             viewModel.addNewCategory(name)
             dialog.dismiss()
         }
@@ -406,10 +398,8 @@ class MainActivity : AppCompatActivity(), FruitCategoryAdapter.FruitCategoryList
             }
             Constant.KeyEvent.DELETE_FRUIT -> {
                 viewModel.deleteFruit(triple.first, triple.third)
-                Toast.makeText(
-                    this@MainActivity, getString(R.string.delete_success),
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this, getString(R.string.delete_success),
+                    Toast.LENGTH_LONG).show()
             }
         }
     }
